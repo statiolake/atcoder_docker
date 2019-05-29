@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as toolchain
 
 MAINTAINER statiolake <statiolake@gmail.com>
 
@@ -21,7 +21,8 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 # remove documents to reduce container size
 RUN rm -rf /root/.rustup/toolchains/*/share/doc
 
-### prepare a project
+# prepare a project
+FROM toolchain as project
 
 WORKDIR /
 
