@@ -36,6 +36,8 @@ ADD Cargo.toml /submission/Cargo.toml
 # pre-compile crates
 RUN cargo build --release
 
+# remove current "hello world" binary
+RUN cargo clean --release -p submission
 RUN rm src/*.rs
 
 ENTRYPOINT cargo run --release < "in.txt"
