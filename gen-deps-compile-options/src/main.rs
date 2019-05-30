@@ -66,11 +66,13 @@ fn find_library_path(deps_path: &Path, package_name: &str, version: &str) -> Res
     //
     // FIXME: maybe more better way
     //
-    // This function uses `{package_name}-{random_id}.d` file in /target/release/deps dir.  This
-    // file seems to contain paths for files included in that crate.  Usually dependency crates
-    // that cargo pulled from crates.io is placed under
-    // ~/.cargo/registory/github-{random_id}/{package_name}-{version}/, so by looking at `*.d` file
-    // we can determine the correct version of library file.
+    // This function uses `{crate_name}-{random}.d` file in
+    // /target/release/deps dir.  This file seems to contain paths for files
+    // included in that crate.  Usually dependency crates that cargo pulled from
+    // crates.io is placed under
+    // ~/.cargo/registory/github-{random}/{package_name}-{version}/, so by
+    // looking at `*.d` file we can determine the correct version of library
+    // file.
     //
 
     let crate_name = package_name.replace("-", "_");
