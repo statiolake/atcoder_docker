@@ -7,7 +7,7 @@ USER root
 ### install toolchains
 
 RUN apt-get update
-RUN apt-get install -y build-essential curl
+RUN apt-get install -y build-essential curl libssl-dev pkg-config
 
 # remove apt package index to reduce container size
 RUN rm -rf /var/lib/apt/lists/*
@@ -21,23 +21,39 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 # remove documents to reduce container size
 RUN rm -rf /root/.rustup/toolchains/*/share/doc
 
-# prepare a project
-FROM toolchain as project
+# prepare compile options resolver
+FROM toolchain as tools
+
+ADD gen-deps-compile-options /gen-deps-compile-options
+
+WORKDIR /gen-deps-compile-options
+
+RUN cargo build --release
+
+# prepare a pre-compiled library
+FROM toolchain as library
 
 WORKDIR /
 
-RUN cargo new submission
+RUN cargo new libraries
 
-WORKDIR /submission
+WORKDIR /libraries
 
 # import prepared Cargo.toml
-ADD Cargo.toml /submission/Cargo.toml
+ADD Cargo.toml.skel /libraries/Cargo.toml
 
 # pre-compile crates
 RUN cargo build --release
 
-# remove current "hello world" binary
-RUN cargo clean --release -p submission
-RUN rm src/*.rs
+# prepare compiler environment
+FROM library as compiler
 
-ENTRYPOINT cargo run --release < "in.txt"
+WORKDIR /
+
+COPY --from=tools /gen-deps-compile-options/target/release/gen-deps-compile-options /root/.cargo/bin/gen-deps-compile-options
+
+RUN mkdir submission
+
+WORKDIR /submission
+
+ENTRYPOINT rustc --edition=2018 -C opt_level=3 $(gen-deps-compile-options /libraries/Cargo.toml /libraries/target/release/deps) main.rs && ./main < "in.txt"

@@ -1,5 +1,5 @@
 [package]
-name = "submission"
+name = "libraries"
 version = "0.1.0"
 authors = []
 edition = "2018"
