@@ -73,7 +73,9 @@ fn find_library_path(deps_path: &Path, package_name: &str, version: &str) -> Res
     // we can determine the correct version of library file.
     //
 
+    let crate_name = package_name.replace("-", "_");
     let package_string = format!("/{}-{}/", package_name, version);
+
     for file in deps_path.read_dir()? {
         let file = file?;
         if file.file_type()?.is_dir() {
@@ -84,7 +86,7 @@ fn find_library_path(deps_path: &Path, package_name: &str, version: &str) -> Res
         let file_name = file_name
             .to_str()
             .ok_or("file_name has invalid byte for UTF-8")?;
-        if !file_name.starts_with(package_name) {
+        if !file_name.starts_with(&crate_name) {
             continue;
         }
 
@@ -97,7 +99,7 @@ fn find_library_path(deps_path: &Path, package_name: &str, version: &str) -> Res
         }
     }
 
-    Err(format!("failed to find appropriate library path {}", package_string).into())
+    Err(format!("failed to find appropriate path for {}", package_string).into())
 }
 
 fn main() -> Result<()> {
