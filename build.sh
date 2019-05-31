@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo docker build --tag statiolake/atcoder_sample --build-arg toolchain=nightly-2019-05-29 .
+sudo docker build --tag statiolake/atcoder_sample --build-arg toolchain=1.35.0 .
