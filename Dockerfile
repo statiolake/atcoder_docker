@@ -14,6 +14,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 ENV USER=root
 ENV PATH=/root/.cargo/bin:$PATH
+ENV RUSTFLAGS='-C target-cpu=native'
 
 ARG toolchain
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain "${toolchain}"
