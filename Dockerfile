@@ -21,29 +21,42 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 # remove documents to reduce container size
 RUN rm -rf /root/.rustup/toolchains/*/share/doc
 
-# prepare compile options resolver
+### prepare compile options resolver
+
 FROM toolchain as tools
 
 ADD gen-deps-compile-options /gen-deps-compile-options
-
 WORKDIR /gen-deps-compile-options
-
 RUN cargo build --release
 
-# prepare a pre-compiled library
+ADD feature_to_support /feature_to_support
+ADD find-proj-dir-by-feature /find-proj-dir-by-feature
+WORKDIR /find-proj-dir-by-feature
+RUN cargo build --release
+
+### prepare a pre-compiled library
+
 FROM toolchain as library
 
-WORKDIR /
-
-RUN cargo new libraries
+# create each precompiled libraries under /libraries
+RUN mkdir /libraries
 
 WORKDIR /libraries
 
 # import prepared Cargo.toml
-ADD Cargo.toml.skel /libraries/Cargo.toml
+ADD Cargo.toml.skel /libraries/Cargo.toml.skel
 
-# pre-compile crates
-RUN cargo build --release
+ADD feature_to_support /feature_to_support
+RUN for f in $(sed "2!d" /feature_to_support) "normal"; do \
+    feature=$(echo $f | tr -d '"'); \
+    cargo new $feature; \
+    cd $feature; \
+    cp ../Cargo.toml.skel Cargo.toml; \
+    if [ "$feature" != "normal" ]; then RUSTFLAGS="-C target-feature=+$feature"; else RUSTFLAGS=""; fi; \
+    echo "Building library for feature $feature (RUSTFLAGS=$RUSTFLAGS)" \
+    cargo build --release; \
+    cd ..; \
+    done
 
 # prepare compiler environment
 FROM library as compiler
@@ -51,10 +64,12 @@ FROM library as compiler
 WORKDIR /
 
 COPY --from=tools /gen-deps-compile-options/target/release/gen-deps-compile-options /root/.cargo/bin/gen-deps-compile-options
+COPY --from=tools /find-proj-dir-by-feature/target/release/find-proj-dir-by-feature /root/.cargo/bin/find-proj-dir-by-feature
 
 RUN mkdir submission
 
 WORKDIR /submission
 
-ENV RUSTFLAGS='-C target-cpu=native'
-ENTRYPOINT rustc --edition=2018 -C opt_level=3 $(gen-deps-compile-options /libraries/Cargo.toml /libraries/target/release/deps) main.rs && ./main < "in.txt"
+ENTRYPOINT rustc --edition=2018 -C opt_level=3 -C target_cpu=native \
+    $(gen-deps-compile-options "$(find-proj-dir-by-feature /libraries)/Cargo.toml" "$(find-proj-dir-by-feature /libraries)/target/release/deps") main.rs \
+    && ./main < "in.txt"
