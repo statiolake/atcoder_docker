@@ -56,4 +56,5 @@ RUN mkdir submission
 
 WORKDIR /submission
 
+ENV RUSTFLAGS='-C target-cpu=native'
 ENTRYPOINT rustc --edition=2018 -C opt_level=3 $(gen-deps-compile-options /libraries/Cargo.toml /libraries/target/release/deps) main.rs && ./main < "in.txt"
