@@ -40,4 +40,5 @@ RUN cargo build --release
 RUN cargo clean --release -p submission
 RUN rm src/*.rs
 
+ENV RUSTFLAGS='-C target-cpu=native'
 ENTRYPOINT cargo run --release < "in.txt"
