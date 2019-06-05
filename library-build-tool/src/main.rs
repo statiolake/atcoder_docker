@@ -7,7 +7,7 @@ macro_rules! target_features {
     (@to $res:ident @rest ) => {};
 
     (@to $res:ident @rest $name:literal: [$($features:literal),*], $($rest:tt)*) => {
-        $res.push(($name, vec![$(if $features == "" { "".to_string() } else { format!("+{}", $features) }),*]));
+        $res.push(($name, vec![$(format!("+{}", $features)),*]));
         target_features!(@to $res @rest $($rest)*);
     };
 

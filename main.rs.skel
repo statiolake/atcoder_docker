@@ -18,6 +18,8 @@ macro_rules! target_features {
 }
 
 fn main() {
-    let features = include!("../../target_features");
+    let mut features = include!("../../target_features");
+    features.sort();
+    features.dedup();
     println!("Build target features are: {:?}", features);
 }

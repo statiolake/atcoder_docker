@@ -288,6 +288,10 @@ impl<'a> std::ops::Not for &'a BitSet {
 }
 
 fn main() {
+    if cfg!(target_feature = "avx2") {
+        println!("avx2 enaled!");
+    }
+
     let n = get!(usize);
     let aa = util::gets::<usize>();
     let sum: usize = aa.iter().sum();

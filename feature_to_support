@@ -1,3 +1,0 @@
-support! {
-    "avx2" "avx"
-}

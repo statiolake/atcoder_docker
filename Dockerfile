@@ -30,11 +30,11 @@ WORKDIR /gen-deps-compile-options
 RUN cargo build --release
 
 ADD target_features /target_features
+
 ADD library-build-tool /library-build-tool
 WORKDIR /library-build-tool
 RUN cargo build --release
 
-ADD feature_to_support /feature_to_support
 ADD find-proj-dir-by-feature /find-proj-dir-by-feature
 WORKDIR /find-proj-dir-by-feature
 RUN cargo build --release
@@ -50,20 +50,12 @@ WORKDIR /libraries
 
 # import prepared Cargo.toml
 ADD Cargo.toml.skel /libraries/Cargo.toml.skel
+ADD main.rs.skel /libraries/main.rs.skel
+ADD target_features /target_features
 
-ADD feature_to_support /feature_to_support
-RUN for f in $(sed "2!d" /feature_to_support) "normal"; do \
-    feature=$(echo $f | tr -d '"'); \
-    cargo new $feature; \
-    cd $feature; \
-    cp ../Cargo.toml.skel Cargo.toml; \
-    if [ "$feature" != "normal" ]; then RUSTFLAGS="-C target-feature=+$feature"; else RUSTFLAGS=""; fi; \
-    echo "Building library for feature $feature (RUSTFLAGS=$RUSTFLAGS)" \
-    cargo build --release; \
-    echo "now directories are: "; \
-    ls -l; \
-    cd ..; \
-    done
+# pre-build libraries
+COPY --from=tools /library-build-tool/target/release/library-build-tool /root/.cargo/bin/library-build-tool
+RUN library-build-tool /libraries/Cargo.toml.skel /libraries/main.rs.skel /target_features /libraries
 
 # prepare compiler environment
 FROM library as compiler
@@ -72,7 +64,6 @@ WORKDIR /
 
 COPY --from=tools /gen-deps-compile-options/target/release/gen-deps-compile-options /root/.cargo/bin/gen-deps-compile-options
 COPY --from=tools /find-proj-dir-by-feature/target/release/find-proj-dir-by-feature /root/.cargo/bin/find-proj-dir-by-feature
-
 RUN mkdir submission
 
 WORKDIR /submission
