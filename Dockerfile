@@ -55,6 +55,8 @@ RUN for f in $(sed "2!d" /feature_to_support) "normal"; do \
     if [ "$feature" != "normal" ]; then RUSTFLAGS="-C target-feature=+$feature"; else RUSTFLAGS=""; fi; \
     echo "Building library for feature $feature (RUSTFLAGS=$RUSTFLAGS)" \
     cargo build --release; \
+    echo "now directories are: "; \
+    ls -l; \
     cd ..; \
     done
 

@@ -1,0 +1,23 @@
+macro_rules! target_features {
+    (@res $res:ident @rest) => {};
+
+    (@res $res:ident @rest $name:literal: [$($features:literal),*], $($rest:tt)*) => {
+        $(
+            if cfg!(target_feature = $features) {
+                $res.push($features);
+            }
+        )*
+        target_features!(@res $res @rest $($rest)*);
+    };
+
+    ($($rest:tt)*) => {{
+        let mut res = Vec::new();
+        target_features!(@res res @rest $($rest)*);
+        res
+    }};
+}
+
+fn main() {
+    let features = include!("../../target_features");
+    println!("Build target features are: {:?}", features);
+}

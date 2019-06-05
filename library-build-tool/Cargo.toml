@@ -5,3 +5,4 @@ authors = ["statiolake <statiolake@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+to_absolute = "0.1.0"

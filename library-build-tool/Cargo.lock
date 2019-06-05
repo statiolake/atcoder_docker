@@ -3,4 +3,14 @@
 [[package]]
 name = "library-build-tool"
 version = "0.1.0"
+dependencies = [
+ "to_absolute 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
+[[package]]
+name = "to_absolute"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[metadata]
+"checksum to_absolute 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5e18f67ceea13aa06bf1aff5496d395b2d5b3caa118a51b4122e78c04bc571b2"

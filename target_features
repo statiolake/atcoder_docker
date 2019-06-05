@@ -1,5 +1,5 @@
 target_features! {
-    "normal": [""],
     "avx2": ["avx2"],
     "avx": ["avx"],
+    "normal": [""],
 }
