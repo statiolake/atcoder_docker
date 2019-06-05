@@ -11,14 +11,11 @@ macro_rules! target_features {
     };
 
     ($name:tt: [$feature:tt $($features_rest:tt)*], $($rest:tt)*) => {{
-        let clo = || {
-            if is_x86_feature_detected!($feature) {
-                target_features!($name: @second [$($features_rest)*], $($rest)*)
-            } else {
-                target_features!($($rest)*)
-            }
-        };
-        clo()
+        if is_x86_feature_detected!($feature) {
+            target_features!($name: @second [$($features_rest)*], $($rest)*)
+        } else {
+            target_features!($($rest)*)
+        }
     }};
 
     ($name:tt: @second [, $feature:tt $($features_rest:tt)*], $($rest:tt)*) => {
