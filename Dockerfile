@@ -29,6 +29,11 @@ ADD gen-deps-compile-options /gen-deps-compile-options
 WORKDIR /gen-deps-compile-options
 RUN cargo build --release
 
+ADD target_features /target_features
+ADD library-build-tool /library-build-tool
+WORKDIR /library-build-tool
+RUN cargo build --release
+
 ADD feature_to_support /feature_to_support
 ADD find-proj-dir-by-feature /find-proj-dir-by-feature
 WORKDIR /find-proj-dir-by-feature
