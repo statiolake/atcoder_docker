@@ -13,7 +13,21 @@ superslice = "=1.0.0"
 itertools = "=0.8.0"
 rustc-hash = "=1.0.1"
 num = "=0.2.0"
-regex = "=1.1.6"
+regex = "=1.1.7"
+modint = "=0.1.1"
+sfmt = "=0.5.0"
+hashbrown = "=0.5.0"
+smallvec = "=0.6.10"
+arrayvec = "=0.4.10"
+jemallocator = "=0.3.2"
+im = "=13.0.0"
+im-rc = "=13.0.0"
+
+[dependencies.proconio]
+git = "https://github.com/statiolake/proconio-rs"
+
+[dependencies.proconio-derive]
+git = "https://github.com/statiolake/proconio-rs"
 
 [dependencies.rand]
 version = "=0.6.5"
