@@ -1,9 +1,11 @@
-use proconio::input;
+use proconio::{input, is_stdin_empty};
 use rand::Rng;
 
 fn main() {
-    input!(n: usize);
-    for _ in 0..n {
+    loop {
+        if is_stdin_empty() {
+            break;
+        }
         input! {
             from: i32,
             to: i32,

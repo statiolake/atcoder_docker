@@ -22,7 +22,7 @@ arrayvec = "=0.4.10"
 jemallocator = "=0.3.2"
 im = "=13.0.0"
 im-rc = "=13.0.0"
-proconio = "=0.1.1"
+proconio = "=0.1.2"
 proconio-derive = "=0.1.1"
 
 [dependencies.rand]
