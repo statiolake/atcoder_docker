@@ -1,3 +1,4 @@
+use proconio::input;
 #[allow(unused_imports)]
 use std::cmp::{max, min, Ordering};
 #[allow(unused_imports)]
@@ -288,8 +289,10 @@ impl<'a> std::ops::Not for &'a BitSet {
 }
 
 fn main() {
-    let n = get!(usize);
-    let aa = util::gets::<usize>();
+    input! {
+        n: usize,
+        aa: [usize; n],
+    };
     let sum: usize = aa.iter().sum();
 
     let mut bitset = BitSet::new(sum + 1);

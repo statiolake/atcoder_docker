@@ -22,12 +22,8 @@ arrayvec = "=0.4.10"
 jemallocator = "=0.3.2"
 im = "=13.0.0"
 im-rc = "=13.0.0"
-
-[dependencies.proconio]
-git = "https://github.com/statiolake/proconio-rs"
-
-[dependencies.proconio-derive]
-git = "https://github.com/statiolake/proconio-rs"
+proconio = "=0.1.1"
+proconio-derive = "=0.1.1"
 
 [dependencies.rand]
 version = "=0.6.5"
