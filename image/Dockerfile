@@ -24,11 +24,7 @@ RUN rm -rf /root/.rustup/toolchains/*/share/doc
 # prepare compile options resolver
 FROM toolchain as tools
 
-ADD gen-deps-compile-options /gen-deps-compile-options
-
-WORKDIR /gen-deps-compile-options
-
-RUN cargo build --release
+RUN cargo install --git https://github.com/rust-lang-ja/atcoder-rustc-dep-option-generator
 
 # prepare a pre-compiled library
 FROM toolchain as library
@@ -50,11 +46,10 @@ FROM library as compiler
 
 WORKDIR /
 
-COPY --from=tools /gen-deps-compile-options/target/release/gen-deps-compile-options /root/.cargo/bin/gen-deps-compile-options
+COPY --from=tools /root/.cargo/bin/rustc-dep-option-generator /root/.cargo/bin/rustc-dep-option-generator
 
 RUN mkdir submission
 
 WORKDIR /submission
 
-ENV RUSTFLAGS='-C target-cpu=native'
-ENTRYPOINT rustc --edition=2018 -C opt_level=3 $(gen-deps-compile-options /libraries/Cargo.toml /libraries/target/release/deps) main.rs && ./main < "in.txt"
+ENTRYPOINT rustc --edition=2018 -C opt-level=3 -C target-cpu=native $(rustc-dep-option-generator /libraries/Cargo.toml /libraries/target/release/deps) main.rs && ./main < "in.txt"
