@@ -24,7 +24,7 @@ RUN rm -rf /root/.rustup/toolchains/*/share/doc
 # prepare compile options resolver
 FROM toolchain as tools
 
-RUN cargo install --git https://github.com/rust-lang-ja/atcoder-rustc-dep-option-generator
+RUN cargo install --git https://github.com/rust-lang-ja/atcoder-rustc-dep-option-generator --branch gitrev
 
 # prepare a pre-compiled library
 FROM toolchain as library

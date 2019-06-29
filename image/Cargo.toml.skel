@@ -24,6 +24,7 @@ im = "=13.0.0"
 im-rc = "=13.0.0"
 proconio = "=0.1.2"
 proconio-derive = "=0.1.1"
+bitset-fixed = { git = "https://github.com/hatoo/bitset-fixed", rev = "2d6347acd634a9cce18be6f133f64535a26a0f00" }
 
 [dependencies.rand]
 version = "=0.6.5"
