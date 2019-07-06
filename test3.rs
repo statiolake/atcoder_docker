@@ -1,5 +1,4 @@
-use proconio::{input, is_stdin_empty};
-use proconio_derive::derive_readable;
+use proconio::{derive_readable, fastout, input, is_stdin_empty};
 use rand::Rng;
 
 #[derive_readable]
@@ -8,6 +7,7 @@ struct Range {
     to: i32,
 }
 
+#[fastout]
 fn main() {
     loop {
         if is_stdin_empty() {

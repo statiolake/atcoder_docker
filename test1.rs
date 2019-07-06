@@ -1,6 +1,7 @@
-use proconio::{input, is_stdin_empty};
+use proconio::{fastout, input, is_stdin_empty};
 use rand::Rng;
 
+#[fastout]
 fn main() {
     loop {
         if is_stdin_empty() {
