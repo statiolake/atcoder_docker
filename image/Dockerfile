@@ -15,8 +15,7 @@ RUN rm -rf /var/lib/apt/lists/*
 ENV USER=root
 ENV PATH=/root/.cargo/bin:$PATH
 
-ARG toolchain
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain "${toolchain}"
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain "1.36.0"
 
 # remove documents to reduce container size
 RUN rm -rf /root/.rustup/toolchains/*/share/doc
