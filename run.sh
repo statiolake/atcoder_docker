@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ $# -ne 2 ]]; then
+if [ $# -ne 2 ]; then
     echo "please specify source file and input."
     exit 1
 fi

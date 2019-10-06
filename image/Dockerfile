@@ -6,8 +6,9 @@ USER root
 
 ### install toolchains
 
+RUN sed -ie "s%http://archive.ubuntu.com/ubuntu/%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get install -y build-essential curl libssl-dev pkg-config
+RUN apt-get install -y build-essential curl libssl-dev pkg-config git
 
 # remove apt package index to reduce container size
 RUN rm -rf /var/lib/apt/lists/*
@@ -30,15 +31,16 @@ FROM toolchain as library
 
 WORKDIR /
 
-RUN cargo new libraries
+# clone project into libraries directory
+RUN git clone https://github.com/rust-lang-ja/atcoder-rust-base --branch ja-all-enabled libraries
 
 WORKDIR /libraries
 
-# import prepared Cargo.toml
-ADD Cargo.toml.skel /libraries/Cargo.toml
-
 # pre-compile crates
 RUN cargo build --release
+
+# run test
+RUN cargo test -- --nocapture
 
 # prepare compiler environment
 FROM library as compiler
